@@ -1,0 +1,27 @@
+%start S
+
+S[SEM=<Present(?pers,?lieu)>] -> NP[SEM=?pers] VP[SEM=?lieu]
+
+NP[SEM=?p] -> Nprop[SEM=?p]
+
+VP[SEM=?l] -> V Prep Det Npiece[SEM=?l]
+
+V -> 'est'
+Prep -> 'dans'
+Det -> 'le' | 'la'
+
+Npiece[SEM=<Salon>] -> 'salon'
+Npiece[SEM=<Cuisine>] -> 'cuisine'
+Npiece[SEM=<Garage>] -> 'garage'
+Npiece[SEM=<Bain>] -> 'bain'
+Npiece[SEM=<Veranda>] -> 'veranda'
+Npiece[SEM=<Jardin>] -> 'jardin'
+Npiece[SEM=<Bibliotheque>] -> 'bibliotheque'
+
+Nprop[SEM=<Moutarde>] -> 'Moutarde'
+Nprop[SEM=<Scarlett>] -> 'Scarlett'
+Nprop[SEM=<Plum>] -> 'Plum'
+Nprop[SEM=<White>] -> 'White'
+Nprop[SEM=<Green>] -> 'Green'
+Nprop[SEM=<Orchid>] -> 'Orchid'
+Nprop[SEM=<Black>] -> 'Black'

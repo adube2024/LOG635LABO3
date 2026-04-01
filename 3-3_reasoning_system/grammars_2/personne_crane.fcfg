@@ -1,0 +1,20 @@
+%start S
+
+S[SEM=<CraneFendu(?pers)>] -> NP[SEM=?pers] VP
+
+NP[SEM=?p] -> Nprop[SEM=?p]
+
+VP -> V Det N Adj
+
+V -> 'a'
+Det -> 'le'
+N -> 'crane' | 'crâne'
+Adj -> 'fendu'
+
+Nprop[SEM=<Mustard>] -> 'Mustard'
+Nprop[SEM=<Scarlett>] -> 'Scarlett'
+Nprop[SEM=<Plum>] -> 'Plum'
+Nprop[SEM=<White>] -> 'White'
+Nprop[SEM=<Green>] -> 'Green'
+Nprop[SEM=<Orchid>] -> 'Orchid'
+Nprop[SEM=<Black>] -> 'Black'
