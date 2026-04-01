@@ -1,0 +1,31 @@
+{
+  "salon": {
+    "person_location": "Moutarde est dans le salon",
+    "weapon_location": "Le marteau est dans le salon"
+  },
+  "bibliotheque": {
+    "person_location": "Scarlett est dans la bibliotheque",
+    "weapon_location": "La corde est dans la bibliotheque"
+  },
+  "cuisine": {
+    "person_location": "Plum est dans la cuisine",
+    "weapon_location": "Le couteau est dans la cuisine"
+  },
+  "bain": {
+    "person_location": "White est dans le bain",
+    "weapon_location": "Le poison est dans le bain"
+  },
+  "veranda": {
+    "person_location": "Green est dans la veranda",
+    "weapon_location": "Le chandelier est dans la veranda"
+  },
+  "jardin": {
+    "person_location": "Orchid est dans le jardin",
+    "weapon_location": "Le pistolet est dans le jardin"
+  },
+  "garage": {
+    "person_location": "Personne n'est dans le garage",
+    "weapon_location": "Le marteau etait dans le garage a 16h",
+    "crime_scene": "Le corps de Black est dans le garage"
+  }
+}
