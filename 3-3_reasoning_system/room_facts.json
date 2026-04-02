@@ -1,31 +1,40 @@
 {
   "salon": {
     "person_location": "Moutarde est dans le salon",
-    "weapon_location": "Le marteau est dans le salon"
+    "weapon_location": "Le marteau est dans le salon",
+    "person_vivante": "Moutarde est vivant"
   },
   "bibliotheque": {
     "person_location": "Scarlett est dans la bibliotheque",
-    "weapon_location": "La corde est dans la bibliotheque"
+    "weapon_location": "La corde est dans la bibliotheque",
+    "person_vivante": "Scarlett est vivant"
   },
   "cuisine": {
     "person_location": "Plum est dans la cuisine",
-    "weapon_location": "Le couteau est dans la cuisine"
+    "weapon_location": "Le couteau est dans la cuisine",
+    "person_vivante": "Plum est vivant"
   },
   "bureau": {
     "person_location": "White est dans le bureau",
-    "weapon_location": "Le collier est dans le bureau"
+    "weapon_location": "Le collier est dans le bureau",
+    "person_vivante": "White est vivant"
   },
   "chambre": {
     "person_location": "Green est dans la chambre",
-    "weapon_location": "Le chandelier est dans la chambre"
+    "weapon_location": "Le chandelier est dans la chambre",
+    "person_vivante": "Green est vivant"
   },
   "jardin": {
     "person_location": "Peacock est dans le jardin",
-    "weapon_location": "Le fusil est dans le jardin"
+    "weapon_location": "Le fusil est dans le jardin",
+    "person_vivante": "Peacock est vivant"
   },
   "garage": {
     "person_location": "Violet est dans le garage",
+    "dead_person_location": "Black est dans le garage",
     "weapon_location": "La hache est dans le garage",
-    "crime_scene": "Black est mort"
+    "person_vivante": "Violet est vivant",
+    "crime_scene": "Black est mort",
+    "personne_morte_blessure": "Black a un crâne fendu"
   }
 }

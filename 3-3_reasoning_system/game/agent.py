@@ -28,6 +28,7 @@ class Agent:
         # Variables pour stocker la personne et l'arme de la pièce actuelle
         self.current_room_person = None
         self.current_room_weapon = None
+        self.current_room_dead_person = None  # Pour stocker la personne morte trouvée
         
         # Base de connaissances (First-order logic - FOL)
         self.crime_kb = FolKB(self.clauses)
@@ -249,40 +250,63 @@ class Agent:
         return sent
     
     def begin_investigation(self):
-        """Commencer l'enquête dans une pièce aléatoire et visiter les pièces jusqu'à trouver le corps"""
+        """Commencer l'enquête en choisissant une pièce et visiter les pièces jusqu'à trouver le corps"""
         print("\n=== DÉBUT DE L'ENQUÊTE ===\n")
         print("⚠️  L'enquête continue de pièce en pièce jusqu'à trouver le corps!\n")
         
-        # Commencer dans une pièce aléatoire
+        # Commencer dans une pièce choisie par l'utilisateur
         visited_rooms = set()
+        questioned_rooms = set()  # Pièces où on a posé les questions
         victim_found = False
         
-        # Choisir une première pièce aléatoire
-        current_room = random.choice(self.board.rooms)
+        # Demander à l'utilisateur de choisir la première pièce
+        print(f"Pièces disponibles : {', '.join(self.board.rooms)}")
+        while True:
+            response = input("Choisissez la pièce de départ : ").strip()
+            
+            # Chercher la pièce (insensible à la casse)
+            matching_room = None
+            for room in self.board.rooms:
+                if room.lower() == response.lower():
+                    matching_room = room
+                    break
+            
+            if matching_room:
+                current_room = matching_room
+                break
+            else:
+                print(f"❌ Pièce inconnue. Les pièces disponibles sont : {', '.join(self.board.rooms)}")
+        
         visited_rooms.add(current_room)
         
-        print(f"📍 Vous commencez l'enquête dans : {current_room}\n")
+        print(f"\n📍 Vous commencez l'enquête dans : {current_room}\n")
         print(f"Chargement des faits du {current_room}...\n")
         self.add_room_facts(current_room)
-        
-        # Poser les questions après avoir chargé les faits de la pièce
-        self.ask_investigation_questions(current_room)
         
         # Vérifier si le corps est dans cette pièce
         if self._check_victim_in_room(current_room):
             print(f"\n💀 VOUS AVEZ TROUVÉ LE CORPS DANS : {current_room}")
             victim_found = True
+            # Poser les questions seulement si on a trouvé le corps
+            self.ask_investigation_questions(current_room)
+            questioned_rooms.add(current_room)
         
-        # Boucle d'enquête : continuer tant que le corps n'est pas trouvé
-        while not victim_found:
-            # Afficher les pièces non visitées
-            unvisited = [r for r in self.board.rooms if r not in visited_rooms]
-            
-            if not unvisited:
-                print("\n✓ Vous avez visité toutes les pièces!")
-                break
-            
-            response = input(f"\nPièces non visitées : {', '.join(unvisited)}\nQuelle pièce visitez-vous ? (ou 'quit' pour quitter) : ").strip()
+        # Boucle d'enquête : continuer jusqu'à terminer l'enquête
+        while True:
+            # Afficher les pièces non visitées ou disponibles si le crime est trouvé
+            if not victim_found:
+                unvisited = [r for r in self.board.rooms if r not in visited_rooms]
+                if not unvisited:
+                    print("\n✓ Vous avez visité toutes les pièces!")
+                    break
+                response = input(f"\nPièces non visitées : {', '.join(unvisited)}\nQuelle pièce visitez-vous ? (ou 'quit' pour quitter) : ").strip()
+            else:
+                # Si le crime est trouvé, on peut revisiter les pièces
+                remaining = [r for r in self.board.rooms if r not in questioned_rooms]
+                if not remaining:
+                    print("\n✓ Vous avez posé toutes les questions!")
+                    break
+                response = input(f"\nPièces où poser les questions : {', '.join(remaining)}\nQuelle pièce visitez-vous ? (ou 'quit' pour quitter) : ").strip()
             
             if response.lower() == 'quit':
                 print("✓ Enquête terminée.")
@@ -302,22 +326,49 @@ class Agent:
                 print(f"Chargement des faits du {current_room}...\n")
                 self.add_room_facts(current_room)
                 
-                # Poser les questions après avoir chargé les faits de la pièce
-                self.ask_investigation_questions(current_room)
-                
-                # Vérifier si le corps est dans cette pièce
-                if self._check_victim_in_room(current_room):
+                # Si on a trouvé le corps et qu'on n'a pas encore posé les questions ici
+                if victim_found and current_room not in questioned_rooms:
+                    self.ask_investigation_questions(current_room)
+                    questioned_rooms.add(current_room)
+                elif victim_found and current_room in questioned_rooms:
+                    print("Vous avez déjà posé les questions ici.")
+                elif not victim_found and self._check_victim_in_room(current_room):
                     print(f"\n💀 VOUS AVEZ TROUVÉ LE CORPS DANS : {current_room}")
                     victim_found = True
+                    self.ask_investigation_questions(current_room)
+                    questioned_rooms.add(current_room)
             else:
                 print(f"❌ Pièce inconnue. Les pièces disponibles sont : {', '.join(self.board.rooms)}")
-    
+        
+        # Afficher les résultats de l'enquête à la fin
+        print("\n" + "=" * 50)
+        print("📋 RÉSULTATS DE L'ENQUÊTE:")
+        print("=" * 50)
+        print("Pièce du crime : ", self.get_crime_room())
+        print("Arme du crime : ", self.get_crime_weapon())
+        print("Personne victime : ", self.get_victim())
+        print("Heure du crime : ", self.get_crime_hour())
+        print("Meurtrier : ", self.get_suspect())
+        print("Personnes innocentes : ", self.get_innocent())
+        print("=" * 50 + "\n")
+            
     def _check_victim_in_room(self, room):
-        """Vérifier si le corps est dans la pièce en cherchant 'EstMort' dans les clauses"""
-        for clause in self.clauses:
-            clause_str = str(clause).lower()
-            if 'estmort' in clause_str and room.lower() in clause_str:
-                return True
+        """Vérifier si le corps est dans la pièce en cherchant 'crime_scene' dans room_facts.json"""
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        room_facts_path = os.path.join(current_dir, '..', 'room_facts.json')
+        
+        try:
+            with open(room_facts_path, 'r', encoding='utf-8') as f:
+                room_facts = json.load(f)
+            
+            room_key = room.lower()
+            if room_key in room_facts:
+                facts = room_facts[room_key]
+                if 'crime_scene' in facts:
+                    return True
+        except:
+            pass
+        
         return False
         
         
@@ -330,10 +381,19 @@ class Agent:
             with open(initial_facts_path, 'r', encoding='utf-8') as f:
                 initial_facts = json.load(f)
             
-            for fact_obj in initial_facts:
-                if isinstance(fact_obj, dict) and 'fact' in fact_obj and 'grammar' in fact_obj:
+            for fact in initial_facts:
+                if isinstance(fact, str):
+                    # Si c'est une string, utiliser la grammaire par défaut
                     try:
-                        fol_expr = self.to_fol([fact_obj['fact']], fact_obj['grammar'])
+                        fol_expr = self.to_fol([fact], 'grammars/arme_blessure.fcfg')
+                        if fol_expr.strip():
+                            self.clauses.append(expr(fol_expr))
+                    except:
+                        pass
+                elif isinstance(fact, dict) and 'fact' in fact and 'grammar' in fact:
+                    # Si c'est un objet avec fact et grammar
+                    try:
+                        fol_expr = self.to_fol([fact['fact']], fact['grammar'])
                         if fol_expr.strip():
                             self.clauses.append(expr(fol_expr))
                     except:
@@ -352,6 +412,7 @@ class Agent:
         # Réinitialiser les personnes et armes pour cette pièce
         self.current_room_person = None
         self.current_room_weapon = None
+        self.current_room_dead_person = None
         
         try:
             with open(room_facts_path, 'r', encoding='utf-8') as f:
@@ -381,6 +442,19 @@ class Agent:
                         self.clauses.append(logic_fact)
                         facts_added.append(logic_fact)
                 
+                # Ajouter dead_person_location si disponible
+                if 'dead_person_location' in facts:
+                    fact_text = facts['dead_person_location']
+                    print(f"  ⚰️ {fact_text}")
+                    # Extraire le nom de la personne morte
+                    parts = fact_text.split(' est dans ')
+                    if len(parts) == 2:
+                        person = parts[0].strip()
+                        room = parts[1].strip().replace('le ', '').replace('la ', '').capitalize()
+                        logic_fact = expr(self.person_room_clause.format(person, room))
+                        self.clauses.append(logic_fact)
+                        facts_added.append(logic_fact)
+                
                 # Ajouter weapon_location
                 if 'weapon_location' in facts:
                     fact_text = facts['weapon_location']
@@ -399,7 +473,43 @@ class Agent:
                 if 'crime_scene' in facts:
                     fact_text = facts['crime_scene']
                     print(f"  ⚠️ {fact_text}")
-                    facts_added.append(fact_text)
+                    try:
+                        # Extraire le nom de la personne morte (ex: "Black" de "Black est mort")
+                        parts = fact_text.split(' est mort')
+                        if len(parts) >= 1:
+                            dead_person = parts[0].strip()
+                            self.current_room_dead_person = dead_person  # Stocker la personne morte
+                        
+                        fol_expr = self.to_fol([fact_text], 'grammars/personne_morte.fcfg')
+                        if fol_expr.strip():
+                            self.clauses.append(expr(fol_expr))
+                            facts_added.append(fol_expr)
+                    except Exception as e:
+                        print(f"   ⚠️ Erreur lors de la conversion: {str(e)}")
+                
+                # Ajouter personne_morte_blessure si disponible
+                if 'personne_morte_blessure' in facts:
+                    fact_text = facts['personne_morte_blessure']
+                    print(f"  💔 {fact_text}")
+                    try:
+                        fol_expr = self.to_fol([fact_text], 'grammars/personne_crane.fcfg')
+                        if fol_expr.strip():
+                            self.clauses.append(expr(fol_expr))
+                            facts_added.append(fol_expr)
+                    except Exception as e:
+                        print(f"   ⚠️ Erreur lors de la conversion: {str(e)}")
+                
+                # Ajouter person_vivante si disponible
+                if 'person_vivante' in facts:
+                    fact_text = facts['person_vivante']
+                    print(f"  ✅ {fact_text}")
+                    try:
+                        fol_expr = self.to_fol([fact_text], 'grammars/personne_vivant.fcfg')
+                        if fol_expr.strip():
+                            self.clauses.append(expr(fol_expr))
+                            facts_added.append(fol_expr)
+                    except Exception as e:
+                        print(f"   ⚠️ Erreur lors de la conversion: {str(e)}")
                 
                 # Mettre à jour la KB
                 self.crime_kb = FolKB(self.clauses)
@@ -414,9 +524,16 @@ class Agent:
             print(f"⚠️ Erreur: le fichier {room_facts_path} n'est pas un JSON valide")
     
     def ask_investigation_questions(self, room_name):
-        """Poser 2 questions dynamiques sur la pièce visitée basées sur la personne et l'arme trouvées"""
-        # Générer les questions dynamiquement basées sur la personne et l'arme
+        """Poser des questions dynamiques sur la pièce visitée basées sur la personne morte, la personne et l'arme trouvées"""
+        # Générer les questions dynamiquement basées sur la personne morte, la personne et l'arme
         questions = []
+        
+        # Question sur l'heure du décès si on a trouvé une personne morte
+        if self.current_room_dead_person:
+            questions.append({
+                'question': f"À quelle heure {self.current_room_dead_person} est mort ?",
+                'grammar': 'grammars/personne_morte_heure.fcfg'
+            })
         
         if self.current_room_person:
             questions.append({
@@ -440,17 +557,44 @@ class Agent:
                 grammar = q['grammar']
                 
                 print(f"\n# {i} Question : {question}")
-                response = input("-> Réponse : ").strip()
                 
-                if response:
-                    # Convertir la réponse en expression logique
-                    try:
-                        fol_expr = self.to_fol([response], grammar)
-                        if fol_expr.strip():
-                            self.clauses.append(expr(fol_expr))
-                            self.crime_kb = FolKB(self.clauses)
-                            print(f"   ✓ Fait ajouté")
-                    except Exception as e:
-                        print(f"   ⚠️ Erreur lors de la conversion: {str(e)}")
+                # Boucle pour permettre à l'utilisateur de réécrire sa réponse
+                response_confirmed = False
+                while not response_confirmed:
+                    response = input("-> Réponse : ").strip()
+                    
+                    if response:
+                        # Demander une confirmation avant la conversion
+                        print(f"   Votre réponse : \"{response}\"")
+                        confirmation = input("   Êtes-vous sûr ? (oui/non) : ").strip().lower()
+                        
+                        if confirmation == 'oui' or confirmation == 'o':
+                            # Convertir la réponse en expression logique
+                            try:
+                                fol_expr = self.to_fol([response], grammar)
+                                if fol_expr.strip():
+                                    self.clauses.append(expr(fol_expr))
+                                    
+                                    # Si c'est un fait HeureCrime(h), ajouter aussi UneHeureApresCrime(h+1)
+                                    if grammar == 'grammars/personne_morte_heure.fcfg':
+                                        # Extraire l'heure du FOL et ajouter +1
+                                        import re
+                                        match = re.search(r'HeureCrime\((\d+)\)', fol_expr)
+                                        if match:
+                                            crime_hour = int(match.group(1))
+                                            next_hour = crime_hour + 1
+                                            self.clauses.append(expr(f'UneHeureApresCrime({next_hour})'))
+                                    
+                                    self.crime_kb = FolKB(self.clauses)
+                                    print(f"   ✓ Fait ajouté")
+                                    response_confirmed = True
+                            except Exception as e:
+                                print(f"   ⚠️ Erreur lors de la conversion: {str(e)}")
+                        else:
+                            # Proposer à l'utilisateur de réécrire ou passer
+                            retry = input("   Voulez-vous réessayer ? (oui/non) : ").strip().lower()
+                            if retry != 'oui' and retry != 'o':
+                                print(f"   ✗ Question passée")
+                                response_confirmed = True
             
             print("\n" + "=" * 50 + "\n")
