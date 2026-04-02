@@ -1,0 +1,18 @@
+%start S
+
+S[SEM=<CauseBlessure(?arme,?blessure)>] -> Det Narme[SEM=?arme] V Blessure[SEM=?blessure]
+
+Det -> 'Un' | 'Une' | 'un' | 'une'
+V -> 'cause'
+
+Narme[SEM=<Fusil>] -> 'fusil'
+Narme[SEM=<Couteau>] -> 'couteau'
+Narme[SEM=<Marteau>] -> 'marteau'
+Narme[SEM=<Hache>] -> 'hache'
+Narme[SEM=<Chandelier>] -> 'chandelier'
+Narme[SEM=<Corde>] -> 'corde'
+Narme[SEM=<Collier>] -> 'collier'
+
+Blessure[SEM=<PlaiePoitrine>] -> 'une' 'plaie' 'à' 'la' 'poitrine'
+Blessure[SEM=<CraneFendu>] -> 'un' 'crâne' 'fendu'
+Blessure[SEM=<MarqueCou>] -> 'des' 'marques' 'au' 'cou'

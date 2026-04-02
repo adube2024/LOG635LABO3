@@ -1,12 +1,9 @@
 [
-    "Un revolver cause un trou à la poitrine.",
-    "Une carabine cause un trou à la poitrine.",
-    "Un poignard cause une plaie à la poitrine.",
-    "Un tisonnier cause une plaie à la poitrine.",
-    "Un couteau cause une plaie à la poitrine.",
-    "Un marteau cause un crâne fendu.",
-    "Une matraque cause un crâne fendu.",
-    "Un chandelier cause un crâne fendu.",
-    "Une corde cause des marques au cou.",
-    "Un collier cause des marques au cou."
+    "Un fusil cause une plaie à la poitrine",
+    "Un couteau cause une plaie à la poitrine",
+    "Un marteau cause un crâne fendu",
+    "Une hache cause un crâne fendu",
+    "Un chandelier cause un crâne fendu",
+    "Une corde cause des marques au cou",
+    "Un collier cause des marques au cou"
 ]

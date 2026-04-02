@@ -1,14 +1,12 @@
 %start S
 
-S[SEM=<MarqueCou(?vp)>] -> VP[SEM=?vp]
-VP[SEM=?n] -> N[SEM=?n] V Det Nmarque P Ncou
+S[SEM=<CraneFendu(?vp)>] -> VP[SEM=?vp]
+VP[SEM=?n] -> N[SEM=?n] V Det Ncrane Nfendu
 N[SEM=?np] -> Nprop[SEM=?np]
 V -> 'a'
-Det -> 'des' | 'une'
-P -> 'au'
-AD -> 'mort' | 'morte'
-Nmarque -> 'marques' | 'marque'
-Ncou -> 'cou'
+Det -> 'des' | 'une' | 'un' 
+Ncrane ->  'crane' | 'crâne' 
+Nfendu -> 'fendu' | 'fendue' 
 
 Nprop[SEM=<Mustard>] -> 'Mustard'
 Nprop[SEM=<Scarlet>] -> 'Scarlet'
