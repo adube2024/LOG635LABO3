@@ -26,6 +26,6 @@
   "garage": {
     "person_location": "Violet est dans le garage",
     "weapon_location": "La hache est dans le garage",
-    "crime_scene": "Le corps de Black est dans le garage"
+    "crime_scene": "Black est mort"
   }
 }
