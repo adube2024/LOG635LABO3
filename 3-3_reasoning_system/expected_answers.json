@@ -1,0 +1,31 @@
+{
+  "garage": {
+    "victim_hour_answer": "Black est mort à 16h",
+    "person_location_answer": "Violet était dans le garage à 17h",
+    "weapon_hour_answer": "La hache était dans le garage à 16h"
+  },
+  "salon": {
+    "person_location_answer": "Moutarde était dans le jardin à 17h",
+    "weapon_hour_answer": "Le marteau était dans le garage à 16h"
+  },
+  "cuisine": {
+    "person_location_answer": "Plum était dans la bibliotheque à 17h",
+    "weapon_hour_answer": "Le couteau était dans le bureau à 16h"
+  },
+  "bibliotheque": {
+    "person_location_answer": "Scarlett était dans le bureau à 17h",
+    "weapon_hour_answer": "La corde était dans le jardin à 16h"
+  },
+  "bureau": {
+    "person_location_answer": "White était dans le salon à 17h",
+    "weapon_hour_answer": "Le collier était dans la cuisine à 16h"
+  },
+  "jardin": {
+    "person_location_answer": "Peacock était dans la chambre à 17h",
+    "weapon_hour_answer": "Le fusil était dans la bibliotheque à 16h"
+  },
+  "chambre": {
+    "person_location_answer": "Green était dans la cuisine à 17h",
+    "weapon_hour_answer": "Le chandelier était dans la chambre à 16h"
+  }
+}

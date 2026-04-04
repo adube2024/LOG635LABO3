@@ -462,7 +462,7 @@ class Agent:
                     # Extraire le nom de l'arme
                     parts = fact_text.split(' est dans ')
                     if len(parts) == 2:
-                        weapon = parts[0].replace('Le ', '').replace('La ', '').strip()
+                        weapon = parts[0].replace('Le ', '').replace('La ', '').strip().capitalize()
                         self.current_room_weapon = weapon  # Stocker l'arme
                         room = parts[1].strip().replace('le ', '').replace('la ', '').capitalize()
                         logic_fact = expr(self.weapon_room_clause.format(weapon, room))
