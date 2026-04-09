@@ -562,7 +562,7 @@ class Agent:
                 
                 print(f"\n# {i} Question : {question}")
                 
-                has_to_talk = random.random() < 0.9 and can_listen
+                has_to_talk = random.random() < 0.4 and can_listen
                 if has_to_talk:
                     talk(question)
                 
