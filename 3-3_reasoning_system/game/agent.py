@@ -4,6 +4,8 @@ import nltk
 import json
 import os
 import random
+from game.tts import talk
+from game.stt import hear_response
 
 
 class Agent:
@@ -552,16 +554,27 @@ class Agent:
             print(f"❓ QUESTIONS POUR {room_name.upper()}")
             print("=" * 50)
             
+            can_listen = True
+
             for i, q in enumerate(questions, 1):
                 question = q['question']
                 grammar = q['grammar']
                 
                 print(f"\n# {i} Question : {question}")
                 
+                has_to_talk = random.random() < 0.9 and can_listen
+                if has_to_talk:
+                    talk(question)
+                
                 # Boucle pour permettre à l'utilisateur de réécrire sa réponse
                 response_confirmed = False
                 while not response_confirmed:
-                    response = input("-> Réponse : ").strip()
+                    if not has_to_talk:
+                        response = input("-> Réponse en écrit: ").strip()
+                    else:
+                        print("-> Répondez, je vous écoute: ")
+                        response = hear_response()
+
                     
                     if response:
                         # Demander une confirmation avant la conversion
@@ -569,6 +582,7 @@ class Agent:
                         confirmation = input("   Êtes-vous sûr ? (oui/non) : ").strip().lower()
                         
                         if confirmation == 'oui' or confirmation == 'o':
+                            has_to_talk = False
                             # Convertir la réponse en expression logique
                             try:
                                 fol_expr = self.to_fol([response], grammar)
@@ -590,11 +604,17 @@ class Agent:
                                     response_confirmed = True
                             except Exception as e:
                                 print(f"   ⚠️ Erreur lors de la conversion: {str(e)}")
+                                can_listen = False
                         else:
                             # Proposer à l'utilisateur de réécrire ou passer
                             retry = input("   Voulez-vous réessayer ? (oui/non) : ").strip().lower()
                             if retry != 'oui' and retry != 'o':
                                 print(f"   ✗ Question passée")
                                 response_confirmed = True
+                            
+                            if has_to_talk:
+                                change_2_text = input("   Voulez-vous écrire la réponse ? (oui/non) : ").strip().lower()
+                                if change_2_text == 'oui':
+                                    has_to_talk = False
             
             print("\n" + "=" * 50 + "\n")
