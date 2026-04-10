@@ -34,16 +34,29 @@ def hear_response():
         return None
     
     response = heard["transcription"].strip()
+
+    # Corrections courantes de Google Speech Recognition
+    misheard = {
+        "l'homme": "Plum",
+        "lhomme": "Plum",
+        "plombe": "Plum",
+        "plume": "Plum",
+    }
+    for wrong, correct in misheard.items():
+        response = response.replace(wrong, correct)
+
     words = response.split()
 
-    characters = ("mutarde","white", "scarlett", "plum", "green", "orchid", "black", "violet", "peacock")
+    characters = ("moutarde","white", "scarlett", "plum", "green", "orchid", "black", "violet", "peacock")
     for i in range(len(words)):
         if words[i].lower() in characters:
             words[i] = words[i].capitalize()
 
         elif words[i].isdigit():
             words[i] = words[i] + "h"
+            if i + 1 < len(words) and words[i + 1].lower() == "h":
+                words[i + 1] = ""
         
-    response = " ".join(words)
+    response = " ".join(words).replace("  ", " ").strip()
     
     return response

@@ -17,7 +17,7 @@ PrepLieu -> 'dans'
 PrepHeure -> 'à'
 
 DetLieu -> 'le' | 'la'
-DetArme -> 'Le' | 'La'
+DetArme -> 'Le' | 'La' | 'le' | 'la'
 
 Npiece[SEM=<Cuisine>] -> 'cuisine'
 Npiece[SEM=<Salon>] -> 'salon'
