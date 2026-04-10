@@ -35,7 +35,6 @@ def hear_response():
     
     response = heard["transcription"].strip()
 
-    # Corrections courantes de Google Speech Recognition
     misheard = {
         "l'homme": "Plum",
         "lhomme": "Plum",
