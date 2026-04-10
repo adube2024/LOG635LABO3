@@ -582,7 +582,6 @@ class Agent:
                         confirmation = input("   Êtes-vous sûr ? (oui/non) : ").strip().lower()
                         
                         if confirmation == 'oui' or confirmation == 'o':
-                            has_to_talk = False
                             # Convertir la réponse en expression logique
                             try:
                                 fol_expr = self.to_fol([response], grammar)
@@ -602,6 +601,7 @@ class Agent:
                                     self.crime_kb = FolKB(self.clauses)
                                     print(f"   ✓ Fait ajouté")
                                     response_confirmed = True
+                                    has_to_talk = False
                             except Exception as e:
                                 print(f"   ⚠️ Erreur lors de la conversion: {str(e)}")
                                 can_listen = False
@@ -614,7 +614,7 @@ class Agent:
                             
                             if has_to_talk:
                                 change_2_text = input("   Voulez-vous écrire la réponse ? (oui/non) : ").strip().lower()
-                                if change_2_text == 'oui':
+                                if change_2_text == 'oui' or change_2_text=='o':
                                     has_to_talk = False
             
             print("\n" + "=" * 50 + "\n")
