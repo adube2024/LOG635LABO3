@@ -40,6 +40,8 @@ def hear_response():
         "lhomme": "Plum",
         "plombe": "Plum",
         "plume": "Plum",
+        "pick-up": "Peacock",
+        "pick up": "Peacock",
     }
     for wrong, correct in misheard.items():
         response = response.replace(wrong, correct)

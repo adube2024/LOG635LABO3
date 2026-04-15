@@ -24,7 +24,7 @@ Npiece[SEM=<Salon>] -> 'salon'
 Npiece[SEM=<Bureau>] -> 'bureau'
 Npiece[SEM=<Garage>] -> 'garage'
 Npiece[SEM=<Jardin>] -> 'jardin'
-Npiece[SEM=<Bibliotheque>] -> 'bibliotheque'
+Npiece[SEM=<Bibliotheque>] -> 'bibliotheque' | 'bibliothèque'
 Npiece[SEM=<Chambre>] -> 'chambre'
 
 Narme[SEM=<Fusil>] -> 'fusil'
