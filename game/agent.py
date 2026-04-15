@@ -254,7 +254,7 @@ class Agent:
     def begin_investigation(self):
         """Commencer l'enquête en choisissant une pièce et visiter les pièces jusqu'à trouver le corps"""
         print("\n=== DÉBUT DE L'ENQUÊTE ===\n")
-        print("⚠️  L'enquête continue de pièce en pièce jusqu'à trouver le corps!\n")
+        print("  L'enquête continue de pièce en pièce jusqu'à trouver le corps!\n")
         
         # Commencer dans une pièce choisie par l'utilisateur
         visited_rooms = set()
@@ -277,17 +277,17 @@ class Agent:
                 current_room = matching_room
                 break
             else:
-                print(f"❌ Pièce inconnue. Les pièces disponibles sont : {', '.join(self.board.rooms)}")
+                print(f"Pièce inconnue. Les pièces disponibles sont : {', '.join(self.board.rooms)}")
         
         visited_rooms.add(current_room)
         
-        print(f"\n📍 Vous commencez l'enquête dans : {current_room}\n")
+        print(f"\n Vous commencez l'enquête dans : {current_room}\n")
         print(f"Chargement des faits du {current_room}...\n")
         self.add_room_facts(current_room)
         
         # Vérifier si le corps est dans cette pièce
         if self._check_victim_in_room(current_room):
-            print(f"\n💀 VOUS AVEZ TROUVÉ LE CORPS DANS : {current_room}")
+            print(f"\n VOUS AVEZ TROUVÉ LE CORPS DANS : {current_room}")
             victim_found = True
             # Poser les questions seulement si on a trouvé le corps
             self.ask_investigation_questions(current_room)
@@ -324,7 +324,7 @@ class Agent:
             if matching_room:
                 current_room = matching_room
                 visited_rooms.add(current_room)
-                print(f"\n📍 Vous êtes maintenant dans : {current_room}")
+                print(f"\n Vous êtes maintenant dans : {current_room}")
                 print(f"Chargement des faits du {current_room}...\n")
                 self.add_room_facts(current_room)
                 
@@ -335,12 +335,12 @@ class Agent:
                 elif victim_found and current_room in questioned_rooms:
                     print("Vous avez déjà posé les questions ici.")
                 elif not victim_found and self._check_victim_in_room(current_room):
-                    print(f"\n💀 VOUS AVEZ TROUVÉ LE CORPS DANS : {current_room}")
+                    print(f"\nVOUS AVEZ TROUVÉ LE CORPS DANS : {current_room}")
                     victim_found = True
                     self.ask_investigation_questions(current_room)
                     questioned_rooms.add(current_room)
             else:
-                print(f"❌ Pièce inconnue. Les pièces disponibles sont : {', '.join(self.board.rooms)}")
+                print(f"Pièce inconnue. Les pièces disponibles sont : {', '.join(self.board.rooms)}")
         
         # Afficher les résultats de l'enquête à la fin
         print("\n" + "=" * 50)
@@ -425,7 +425,7 @@ class Agent:
             if room_key in room_facts:
                 facts = room_facts[room_key]
                 
-                print(f"\n🏠 FAITS DE LA PIÈCE: {room_name.upper()}")
+                print(f"\nFAITS DE LA PIÈCE: {room_name.upper()}")
                 print("=" * 50)
                 
                 facts_added = []
@@ -433,7 +433,7 @@ class Agent:
                 # Ajouter person_location
                 if 'person_location' in facts:
                     fact_text = facts['person_location']
-                    print(f"  👤 {fact_text}")
+                    print(f"{fact_text}")
                     # Extraire le nom de la personne
                     parts = fact_text.split(' est dans ')
                     if len(parts) == 2:
@@ -447,7 +447,7 @@ class Agent:
                 # Ajouter dead_person_location si disponible
                 if 'dead_person_location' in facts:
                     fact_text = facts['dead_person_location']
-                    print(f"  ⚰️ {fact_text}")
+                    print(f"{fact_text}")
                     # Extraire le nom de la personne morte
                     parts = fact_text.split(' est dans ')
                     if len(parts) == 2:
@@ -460,7 +460,7 @@ class Agent:
                 # Ajouter weapon_location
                 if 'weapon_location' in facts:
                     fact_text = facts['weapon_location']
-                    print(f"  🔪 {fact_text}")
+                    print(f"{fact_text}")
                     # Extraire le nom de l'arme
                     parts = fact_text.split(' est dans ')
                     if len(parts) == 2:
@@ -474,7 +474,7 @@ class Agent:
                 # Ajouter crime_scene si disponible
                 if 'crime_scene' in facts:
                     fact_text = facts['crime_scene']
-                    print(f"  ⚠️ {fact_text}")
+                    print(f"{fact_text}")
                     try:
                         # Extraire le nom de la personne morte (ex: "Black" de "Black est mort")
                         parts = fact_text.split(' est mort')
@@ -487,43 +487,43 @@ class Agent:
                             self.clauses.append(expr(fol_expr))
                             facts_added.append(fol_expr)
                     except Exception as e:
-                        print(f"   ⚠️ Erreur lors de la conversion: {str(e)}")
+                        print(f"Erreur lors de la conversion: {str(e)}")
                 
                 # Ajouter personne_morte_blessure si disponible
                 if 'personne_morte_blessure' in facts:
                     fact_text = facts['personne_morte_blessure']
-                    print(f"  💔 {fact_text}")
+                    print(f"{fact_text}")
                     try:
                         fol_expr = self.to_fol([fact_text], 'grammars/personne_crane.fcfg')
                         if fol_expr.strip():
                             self.clauses.append(expr(fol_expr))
                             facts_added.append(fol_expr)
                     except Exception as e:
-                        print(f"   ⚠️ Erreur lors de la conversion: {str(e)}")
+                        print(f"Erreur lors de la conversion: {str(e)}")
                 
                 # Ajouter person_vivante si disponible
                 if 'person_vivante' in facts:
                     fact_text = facts['person_vivante']
-                    print(f"  ✅ {fact_text}")
+                    print(f"{fact_text}")
                     try:
                         fol_expr = self.to_fol([fact_text], 'grammars/personne_vivant.fcfg')
                         if fol_expr.strip():
                             self.clauses.append(expr(fol_expr))
                             facts_added.append(fol_expr)
                     except Exception as e:
-                        print(f"   ⚠️ Erreur lors de la conversion: {str(e)}")
+                        print(f"Erreur lors de la conversion: {str(e)}")
                 
                 # Mettre à jour la KB
                 self.crime_kb = FolKB(self.clauses)
                 print(f"\n✓ {len(facts_added)} fait(s) ajouté(s) à la base de connaissances")
                 print("=" * 50 + "\n")
             else:
-                print(f"⚠️ Pièce '{room_name}' non trouvée dans room_facts.json")
+                print(f"Pièce '{room_name}' non trouvée dans room_facts.json")
         
         except FileNotFoundError:
-            print(f"⚠️ Attention: {room_facts_path} non trouvé")
+            print(f"Attention: {room_facts_path} non trouvé")
         except json.JSONDecodeError:
-            print(f"⚠️ Erreur: le fichier {room_facts_path} n'est pas un JSON valide")
+            print(f"Erreur: le fichier {room_facts_path} n'est pas un JSON valide")
     
     def ask_investigation_questions(self, room_name):
         """Poser des questions dynamiques sur la pièce visitée basées sur la personne morte, la personne et l'arme trouvées"""
@@ -551,7 +551,7 @@ class Agent:
         
         if questions:
             print("\n" + "=" * 50)
-            print(f"❓ QUESTIONS POUR {room_name.upper()}")
+            print(f"QUESTIONS POUR {room_name.upper()}")
             print("=" * 50)
             
             can_listen = True
@@ -603,7 +603,7 @@ class Agent:
                                     response_confirmed = True
                                     has_to_talk = False
                             except Exception as e:
-                                print(f"   ⚠️ Erreur lors de la conversion: {str(e)}")
+                                print(f"Erreur lors de la conversion: {str(e)}")
                                 can_listen = False
                         else:
                             # Proposer à l'utilisateur de réécrire ou passer
